@@ -5,4 +5,4 @@ Liens vers l'énoncé du TP : http://andreiarion.github.io/Project2022.html
 
 **Config:** le dossier config regroupe les fichiers de configuration et commandes utilisés pour installer les outils (cassandra, spark,...) et creation des tables/keyspace
 
-**script**: regroupe l'ensemble des scripts de scraping et requêtes
+**scripts**: regroupe l'ensemble des scripts de scraping et requêtes
