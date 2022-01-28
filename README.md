@@ -10,3 +10,7 @@ Les machines suivantes ont été utilisées :
 - tp-hadoop-6 (Jia)
 - tp-hadoop-7  (Aurélien)
 - tp-hadoop-21   (Pierre)
+
+**Config:** le dossier config regroupe les fichiers de configuration et commandes utilisés pour installer les outils (cassandra, spark,...) et creation des tables/keyspace
+
+**scripts**: regroupe l'ensemble des scripts de scraping et requêtes
