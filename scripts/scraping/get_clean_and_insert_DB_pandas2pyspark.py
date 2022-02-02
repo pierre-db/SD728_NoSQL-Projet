@@ -1,5 +1,3 @@
-import pyspark
-from pyspark.sql import SparkSession
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -12,6 +10,8 @@ from random import choice
 from shutil import move
 from os import path, mkdir
 from time import time
+
+from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.master("local[*]").appName("SparkWorker").getOrCreate()
 
@@ -83,6 +83,6 @@ def nettoyage_event(file):
     return df
 
 event = nettoyage_event('../../data/20220202123000.export.CSV')
-sparkDF2 = spark.createDataFrame(event)
-sparkDF2.printSchema()
-sparkDF2.show()
+sparkDF = spark.createDataFrame(event)
+sparkDF.printSchema()
+sparkDF.show()
