@@ -32,7 +32,16 @@ endpoint_snitch: GossipingPropertyFileSnitch
 start-master.sh
 start-workers.sh 
 ```
-3. Pour lancer une shell Spark ou Pyspark, depuis n'importe quelle machine lancer la commande :
+3. Editer le fichier ```/opt/spark/conf/workers``` sur le master :
+```
+tp-hadoop-1
+tp-hadoop-2
+tp-hadoop-5
+tp-hadoop-6
+tp-hadoop-7
+tp-hadoop-21
+```
+4. Pour lancer une shell Spark ou Pyspark, depuis n'importe quelle machine lancer la commande :
 ```
 # pyspark
 pyspark --deploy-mode client --master spark://tp-hadoop-1:7077 --conf spark.cassandra.connection.host=tp-hadoop-1 --packages com.datastax.spark:spark-cassandra-connector_2.12:3.1.0
