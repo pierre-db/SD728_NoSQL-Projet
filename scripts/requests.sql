@@ -45,8 +45,8 @@ CREATE TABLE table_cd (
     PRIMARY KEY ((source), theme, person, location, day, month, year)
 );
 
--- table_c
-CREATE TABLE table_cd (
+-- table_d
+CREATE TABLE table_d (
     location text,
     language text,
     total int,
