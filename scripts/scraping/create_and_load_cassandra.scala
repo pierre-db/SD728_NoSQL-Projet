@@ -3,14 +3,14 @@ import com.datastax.spark.connector._
 import com.datastax.spark.connector.cql.CassandraConnector
 
 // chargement des fichiers dans des DF
-val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.export.CSV").cache
-val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.mentions.CSV").cache
-val gkg = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.gkg.csv").cache
+val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.export.CSV")
+val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.mentions.CSV")
+val gkg = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.gkg.csv")
 
 // créationde vues pour interragir en SQL
 event.createOrReplaceTempView("event")
 mentions.createOrReplaceTempView("mentions")
-kb.createOrReplaceTempView("gkg")
+gkg.createOrReplaceTempView("gkg")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
