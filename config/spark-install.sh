@@ -24,6 +24,9 @@ source ~/.profile
 cp /opt/spark/conf/spark-env.sh.template /opt/spark/conf/spark-env.sh
 echo "SPARK_MASTER_HOST=tp-hadoop-1" >> /opt/spark/conf/spark-env.sh
 
+# editer la liste des workers sur le master
+# vim /opt/spark/conf/workers
+
 # démarer spark sur le master uniquement :
 # start-master.sh
 # start-workers.sh 

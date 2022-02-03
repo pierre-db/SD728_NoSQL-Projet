@@ -27,7 +27,7 @@ val table_ab = spark.sql(req_table_ab)
 //table_ab.show()
 
 // creation de la nouvelle table
-table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("country")), clusteringKeyColumns = Some(Seq("event_day", "event_month", "event_year")))
+table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("country")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
 
 // insertion des valeurs dans la nouvelle table
 table_ab.write.cassandraFormat("table_ab", "reponses", "").mode("append").save()
@@ -43,7 +43,7 @@ GROUP BY source, theme, personne, lieu, jour, mois, annee
 val table_c = spark.sql(req_table_c)
 
 // creation de la nouvelle table
-table_c.createCassandraTable("reponses", "table_c", partitionKeyColumns = Some(Seq("source")), clusteringKeyColumns = Some(Seq("theme", "person", "location", "day", "month", "year")))
+table_c.createCassandraTable("reponses", "table_c", partitionKeyColumns = Some(Seq("source")), clusteringKeyColumns = Some(Seq("theme", "personne", "lieu", "jour", "mois", "annee")))
 
 // insertion des valeurs dans la nouvelle table
 table_c.write.cassandraFormat("table_c", "reponses", "").mode("append").save()
@@ -60,7 +60,7 @@ GROUP BY lieu, langue, jour, mois, annee
 val table_d = spark.sql(req_table_d)
 
 // creation de la nouvelle table
-table_d.createCassandraTable("reponses", "table_d", partitionKeyColumns = Some(Seq("location", "language")), clusteringKeyColumns = Some(Seq("day", "month", "year")))
+table_d.createCassandraTable("reponses", "table_d", partitionKeyColumns = Some(Seq("lieu", "langue")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
 
 // insertion des valeurs dans la nouvelle table
 table_d.write.cassandraFormat("table_d", "reponses", "").mode("append").save()
