@@ -3,9 +3,9 @@ Liens vers l'énoncé du TP : http://andreiarion.github.io/Project2022.html.
 
 **La problématique :** L'objectif du projet est de se bases sur la base 2021-2022: GDELT pour répondre à un certain nombre de questions. Pour cela il faut utiliser un système de stockage distribué, résilient et performant.
 
-**```config``` :** le dossier config regroupe les fichiers de configuration et commandes utilisés pour installer les outils (cassandra, spark,...) et creation des tables/keyspace.
-
-**```scripts``` :** regroupe l'ensemble des scripts de scraping et requêtes.
+**Structure du repo :**
+- ```config``` : regroupe les fichiers de configuration et commandes utilisés pour installer les outils (Cassandra, Spark, etc.).
+- ```scripts``` : regroupe l'ensemble des scripts de récupération, nettoyage des données et la creation des tables sous Cassandra.
 
 **Machines utilisées :**
 - tp-hadoop-1  (Phileas)
