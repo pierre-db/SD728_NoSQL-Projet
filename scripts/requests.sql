@@ -20,11 +20,11 @@ CREATE KEYSPACE reponses WITH replication = {'class': 'SimpleStrategy', 'replica
 
 -- table_ab
 CREATE TABLE table_ab (
-    event_id int,
-    mention_id int,
+    event_id bigint,
+    mention_id bigint,
     pays text,
     langue text,
-    jour int,
+    jour bigint,
     mois int,
     annee int,
     total int,
@@ -39,7 +39,7 @@ CREATE TABLE table_cd (
     lieu text,
     total int,
     somme_ton float,
-    jour int,
+    jour bigint,
     mois int,
     annee int,
     PRIMARY KEY ((source), theme, personne, lieu, jour, mois, annee)
@@ -51,7 +51,7 @@ CREATE TABLE table_d (
     langue text,
     total int,
     somme_ton float,
-    jour int,
+    jour bigint,
     mois int,
     annee int,
     PRIMARY KEY ((lieu, langue), jour, mois, annee)
