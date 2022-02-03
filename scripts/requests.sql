@@ -1,19 +1,19 @@
 -- Requêtes SQL de mise en forme des tables Cassandra
 -- table_ab
-SELECT event_id, mention_id, country, language, event_day, event_month, event_year, COUNT(*) AS total
+SELECT event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, mention_id, country, language, event_day, event_month, event_year
+GROUP BY event_id, mention_id, pays, langue, jour, mois, annee
 
 -- table_c
-SELECT source, theme, person, location, day, month, year, COUNT(*) as total, SUM(tone) as sum_tone
+SELECT source, theme, personne, lieu, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
 FROM gkg
-GROUP BY source, theme, person, location, day, month, year
+GROUP BY source, theme, personne, lieu, jour, mois, annee
 
 -- table_d
-SELECT location, language, day, month, year, COUNT(*) as total, SUM(tone) as sum_tone
+SELECT lieu, langue, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
 FROM gkg
-GROUP BY location, language, day, month, year
+GROUP BY lieu, langue, jour, mois, annee
 
 -- Requêtes CQL de creation des tables
 CREATE KEYSPACE reponses WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
@@ -22,39 +22,39 @@ CREATE KEYSPACE reponses WITH replication = {'class': 'SimpleStrategy', 'replica
 CREATE TABLE table_ab (
     event_id int,
     mention_id int,
-    country text,
-    language text,
-    event_day int,
-    event_month int,
-    event_year int,
+    pays text,
+    langue text,
+    jour int,
+    mois int,
+    annee int,
     total int,
-    PRIMARY KEY ((country), event_day, event_month, event_year)
+    PRIMARY KEY ((pays), jour, mois, annee)
 );
 
 -- table_c
 CREATE TABLE table_cd (
     source text,
     theme text,
-    person text,
-    location text,
+    personne text,
+    lieu text,
     total int,
-    sum_tone float,
-    day int,
-    month int,
-    year int,
-    PRIMARY KEY ((source), theme, person, location, day, month, year)
+    somme_ton float,
+    jour int,
+    mois int,
+    annee int,
+    PRIMARY KEY ((source), theme, personne, lieu, jour, mois, annee)
 );
 
 -- table_d
 CREATE TABLE table_d (
-    location text,
-    language text,
+    lieu text,
+    langue text,
     total int,
-    sum_tone float,
-    day int,
-    month int,
-    year int,
-    PRIMARY KEY ((location, language), day, month, year)
+    somme_ton float,
+    jour int,
+    mois int,
+    annee int,
+    PRIMARY KEY ((lieu, langue), jour, mois, annee)
 );
 
 -- Requêtes CQL de réponse aux questions
@@ -62,20 +62,20 @@ CREATE TABLE table_d (
 SELECT * FROM table_ab
 
 -- b
-SELECT event_id, SUM(total) as cnt, event_day, event_month, event_year
+SELECT event_id, SUM(total) as compte, jour, mois, annee
 FROM table_ab
-WHERE country = "input"
-GROUP BY day/month/year
-ORDER BY cnt DESC
+WHERE pays = "input"
+GROUP BY jour/mois/annee
+ORDER BY compte DESC
 
 -- c
-SELECT theme, person, lieu, SUM(total), SUM(sum_tone)/SUM(total), day, month, year
+SELECT theme, personne, lieu, SUM(total), SUM(somme_ton)/SUM(total), jour, mois, annee
 FROM table_c
 WHERE source = "input"
-GROUP BY theme, person, lieu, day, month, year
+GROUP BY theme, personne, lieu, jour, mois, annee
 
 -- d
-SELECT language, location, SUM(sum_tone)/SUM(total), day
+SELECT langue, lieu, SUM(somme_ton)/SUM(total), jour
 FROM table_d
-WHERE language = "input1", location = "input2"
-GROUP BY day, month, year
+WHERE langue = "input1", lieu = "input2"
+GROUP BY jour, mois, annee
