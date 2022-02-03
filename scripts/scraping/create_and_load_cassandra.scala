@@ -14,10 +14,10 @@ gkg.createOrReplaceTempView("gkg")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
-SELECT event_id, mention_id, country, language, event_day, event_month, event_year, COUNT(*) AS total
+SELECT event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, mention_id, country, language, event_day, event_month, event_year
+GROUP BY event_id, mention_id, pays, langue, jour, mois, annee
 """
 
 // execution de la requête sur le DF
@@ -34,9 +34,9 @@ table_ab.write.cassandraFormat("table_ab", "reponses", "").mode("append").save()
 
 // définition de la requête SQL table_c
 val req_table_c = """
-SELECT source, theme, person, location, day, month, year, COUNT(*) as total, SUM(tone) as sum_tone
+SELECT source, theme, personne, lieu, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
 FROM gkg
-GROUP BY source, theme, person, location, day, month, year
+GROUP BY source, theme, personne, lieu, jour, mois, annee
 """
 
 // execution de la requête sur le DF
@@ -51,9 +51,9 @@ table_c.write.cassandraFormat("table_c", "reponses", "").mode("append").save()
 
 // définition de la requête SQL table_d
 val req_table_d = """
-SELECT location, language, day, month, year, COUNT(*) as total, SUM(tone) as sum_tone
+SELECT lieu, langue, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
 FROM gkg
-GROUP BY location, language, day, month, year
+GROUP BY lieu, langue, jour, mois, annee
 """
 
 // execution de la requête sur le DF
