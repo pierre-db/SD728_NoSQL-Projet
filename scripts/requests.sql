@@ -3,7 +3,7 @@
 SELECT event_id, mention_id, country, language, event_day, event_month, event_year, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, mention_id, country, language, event_day, event_month, event_year,
+GROUP BY event_id, mention_id, country, language, event_day, event_month, event_year
 
 -- table_c
 SELECT source, theme, person, location, day, month, year, COUNT(*) as total, SUM(tone) as sum_tone
@@ -45,7 +45,15 @@ CREATE TABLE table_cd (
     PRIMARY KEY ((source), theme, person, location, day, month, year)
 );
 
--- table_d
+-- table_d//Get all the individual file paths
+def getListOfFiles(dir: File):List[File] = dir.listFiles.filter(_.isFile).toList
+val filelist = getListOfFiles(new File("file:///PATH_TO_FILE/"))
+
+//Read from the list of files you created
+val Files= filelist.map(file => { sqlContext.read.format("com.databricks.spark.csv").option("header","true").load(file.getPath.toString) })
+
+//Merge all the data into a single rdd
+val mergedFile= Files.reduce((x, y) => x.unionAll(y))
 CREATE TABLE table_d (
     location text,
     language text,
