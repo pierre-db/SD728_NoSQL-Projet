@@ -17,10 +17,10 @@ gkg.createOrReplaceTempView("gkg")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
-SELECT event.event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event.event_id, mention_id, pays, langue, jour, mois, annee
+GROUP BY event.event_id, pays, langue, jour, mois, annee
 """
 
 // execution de la requête sur le DF

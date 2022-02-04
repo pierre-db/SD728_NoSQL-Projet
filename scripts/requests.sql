@@ -1,9 +1,9 @@
 -- Requêtes SQL de mise en forme des tables Cassandra
 -- table_ab
-SELECT event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, mention_id, pays, langue, jour, mois, annee
+GROUP BY event_id, pays, langue, jour, mois, annee
 
 -- table_c
 SELECT source, theme, personne, lieu, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
