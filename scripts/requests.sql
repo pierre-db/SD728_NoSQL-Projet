@@ -1,6 +1,6 @@
 -- Requêtes SQL de mise en forme des tables Cassandra
 -- table_ab
-SELECT event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event.event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
 GROUP BY event_id, pays, langue, jour, mois, annee
@@ -59,23 +59,23 @@ CREATE TABLE table_d (
 
 -- Requêtes CQL de réponse aux questions
 -- a
-SELECT * FROM table_ab
+SELECT * FROM table_ab;
 
 -- b
 SELECT event_id, SUM(total) as compte, jour, mois, annee
 FROM table_ab
 WHERE pays = "input"
 GROUP BY jour/mois/annee
-ORDER BY compte DESC
+ORDER BY compte DESC;
 
 -- c
 SELECT theme, personne, lieu, SUM(total), SUM(somme_ton)/SUM(total), jour, mois, annee
 FROM table_c
 WHERE source = "input"
-GROUP BY theme, personne, lieu, jour, mois, annee
+GROUP BY theme, personne, lieu, jour, mois, annee;
 
 -- d
 SELECT langue, lieu, SUM(somme_ton)/SUM(total), jour
 FROM table_d
 WHERE langue = "input1", lieu = "input2"
-GROUP BY jour, mois, annee
+GROUP BY jour, mois, annee;
