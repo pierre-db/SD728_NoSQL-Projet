@@ -1,19 +1,19 @@
 -- Requêtes SQL de mise en forme des tables Cassandra
 -- table_ab
-SELECT event.event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event.event_id, pays, langue, annee, mois, jour COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, pays, langue, jour, mois, annee
+GROUP BY event.event_id, pays, langue, annee, mois, jour
 
 -- table_c
-SELECT source, theme, personne, lieu, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
-FROM gkg
-GROUP BY source, theme, personne, lieu, jour, mois, annee
+SELECT source, theme, personne, lieu, annee, mois, jour, SUM(total) as total, SUM(somme_ton) as somme_ton
+FROM gkg_c
+GROUP BY source, theme, personne, lieu, annee, mois, jour
 
 -- table_d
-SELECT lieu, langue, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
-FROM gkg
-GROUP BY lieu, langue, jour, mois, annee
+SELECT lieu, langue, annee, mois, jour, SUM(total) as total, SUM(somme_ton) as somme_ton
+FROM gkg_d
+GROUP BY lieu, langue, annee, mois, jour
 
 -- Requêtes CQL de creation des tables
 CREATE KEYSPACE reponses WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
@@ -62,20 +62,20 @@ CREATE TABLE table_d (
 SELECT * FROM table_ab;
 
 -- b
-SELECT event_id, SUM(total) as compte, jour, mois, annee
+SELECT event_id, SUM(total) as compte, annee --, mois, jour
 FROM table_ab
-WHERE pays = "input"
-GROUP BY jour/mois/annee
+WHERE pays = 'input'
+GROUP BY annee -- mois, jour
 ORDER BY compte DESC;
 
 -- c
-SELECT theme, personne, lieu, SUM(total), SUM(somme_ton)/SUM(total), jour, mois, annee
+SELECT theme, personne, lieu, SUM(total), SUM(somme_ton)/SUM(total), jour -- mois, annee
 FROM table_c
-WHERE source = "input"
-GROUP BY theme, personne, lieu, jour, mois, annee;
+WHERE source = 'input'
+GROUP BY theme, personne, lieu, annee -- mois, jour
 
 -- d
 SELECT langue, lieu, SUM(somme_ton)/SUM(total), jour
 FROM table_d
-WHERE langue = "input1", lieu = "input2"
-GROUP BY jour, mois, annee;
+WHERE langue = 'input1' AND lieu = 'input2'
+GROUP BY annee -- mois, jour

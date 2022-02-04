@@ -6,21 +6,23 @@ import com.datastax.spark.connector.cql.CassandraConnector
 val path = "/tmp/tests/day/"
 
 // chargement des fichiers dans des DF
-val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.export.CSV")
-val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.mentions.CSV")
-val gkg = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg.csv")
+val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.export.CSV.gz")
+val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.mentions.CSV.gz")
+val gkg_c = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg.csv.gz")
+val gkg_d = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg_d.csv.gz")
 
 // créationde vues pour interragir en SQL
 event.createOrReplaceTempView("event")
 mentions.createOrReplaceTempView("mentions")
-gkg.createOrReplaceTempView("gkg")
+gkg_c.createOrReplaceTempView("gkg_c")
+gkg_d.createOrReplaceTempView("gkg_d")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
-SELECT event.event_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event.event_id, pays, langue, annee, mois, jour, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event.event_id, pays, langue, jour, mois, annee
+GROUP BY event.event_id, pays, langue, annee, mois, jour
 """
 
 // execution de la requête sur le DF
@@ -30,23 +32,23 @@ val table_ab = spark.sql(req_table_ab)
 //table_ab.show()
 
 // creation de la nouvelle table
-table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
+table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("annee", "mois", "jour")))
 
 // insertion des valeurs dans la nouvelle table
 table_ab.write.cassandraFormat("table_ab", "reponses", "").mode("append").save()
 
 // définition de la requête SQL table_c
 val req_table_c = """
-SELECT source, theme, personne, lieu, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
-FROM gkg
-GROUP BY source, theme, personne, lieu, jour, mois, annee
+SELECT source, theme, personne, lieu, annee, mois, jour, SUM(total) as total, SUM(somme_ton) as somme_ton
+FROM gkg_c
+GROUP BY source, theme, personne, lieu, annee, mois, jour
 """
 
 // execution de la requête sur le DF
 val table_c = spark.sql(req_table_c)
 
 // creation de la nouvelle table
-table_c.createCassandraTable("reponses", "table_c", partitionKeyColumns = Some(Seq("source")), clusteringKeyColumns = Some(Seq("theme", "personne", "lieu", "jour", "mois", "annee")))
+table_c.createCassandraTable("reponses", "table_c", partitionKeyColumns = Some(Seq("source")), clusteringKeyColumns = Some(Seq("theme", "personne", "lieu", "annee", "mois", "jour")))
 
 // insertion des valeurs dans la nouvelle table
 table_c.write.cassandraFormat("table_c", "reponses", "").mode("append").save()
@@ -54,16 +56,16 @@ table_c.write.cassandraFormat("table_c", "reponses", "").mode("append").save()
 
 // définition de la requête SQL table_d
 val req_table_d = """
-SELECT lieu, langue, jour, mois, annee, COUNT(*) as total, SUM(ton) as somme_ton
-FROM gkg
-GROUP BY lieu, langue, jour, mois, annee
+SELECT lieu, langue, annee, mois, jour, SUM(total) as total, SUM(somme_ton) as somme_ton
+FROM gkg_d
+GROUP BY lieu, langue, annee, mois, jour
 """
 
 // execution de la requête sur le DF
 val table_d = spark.sql(req_table_d)
 
 // creation de la nouvelle table
-table_d.createCassandraTable("reponses", "table_d", partitionKeyColumns = Some(Seq("lieu", "langue")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
+table_d.createCassandraTable("reponses", "table_d", partitionKeyColumns = Some(Seq("lieu", "langue")), clusteringKeyColumns = Some(Seq("annee", "mois", "jour")))
 
 // insertion des valeurs dans la nouvelle table
 table_d.write.cassandraFormat("table_d", "reponses", "").mode("append").save()
