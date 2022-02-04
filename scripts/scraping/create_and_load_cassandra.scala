@@ -2,10 +2,13 @@ import org.apache.spark.sql.cassandra._
 import com.datastax.spark.connector._
 import com.datastax.spark.connector.cql.CassandraConnector
 
+// définition du répertoire de stockage des données
+val path = "/tmp/tests/day/"
+
 // chargement des fichiers dans des DF
-val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.export.CSV")
-val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.mentions.CSV")
-val gkg = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load("*.gkg.csv")
+val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.export.CSV")
+val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.mentions.CSV")
+val gkg = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg.csv")
 
 // créationde vues pour interragir en SQL
 event.createOrReplaceTempView("event")
@@ -14,10 +17,10 @@ gkg.createOrReplaceTempView("gkg")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
-SELECT event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
+SELECT event.event_id, mention_id, pays, langue, jour, mois, annee, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event_id, mention_id, pays, langue, jour, mois, annee
+GROUP BY event.event_id, mention_id, pays, langue, jour, mois, annee
 """
 
 // execution de la requête sur le DF
@@ -27,7 +30,7 @@ val table_ab = spark.sql(req_table_ab)
 //table_ab.show()
 
 // creation de la nouvelle table
-table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("country")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
+table_ab.createCassandraTable("reponses", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("jour", "mois", "annee")))
 
 // insertion des valeurs dans la nouvelle table
 table_ab.write.cassandraFormat("table_ab", "reponses", "").mode("append").save()
