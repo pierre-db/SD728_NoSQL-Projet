@@ -46,12 +46,12 @@ val table_ab = spark.sql(req_table_ab)
 //table_ab.show()
 
 // creation de la nouvelle table
-write_log("creating table table_ab")
+write_log("creating table table_ab ...")
 table_ab.createCassandraTable("production", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("annee", "mois", "jour")))
 write_log("table table_ab created")
 
 // insertion des valeurs dans la nouvelle table
-write_log("inserting table table_ab")
+write_log("inserting table table_ab ...")
 table_ab.write.cassandraFormat("table_ab", "production", "").mode("append").save()
 write_log("table table_ab inserted")
 
@@ -66,12 +66,12 @@ GROUP BY source, theme, personne, lieu, annee, mois, jour
 val table_c = spark.sql(req_table_c)
 
 // creation de la nouvelle table
-write_log("creating table table_c")
+write_log("creating table table_c ...")
 table_c.createCassandraTable("production", "table_c", partitionKeyColumns = Some(Seq("source")), clusteringKeyColumns = Some(Seq("theme", "personne", "lieu", "annee", "mois", "jour")))
 write_log("table table_c created")
 
 // insertion des valeurs dans la nouvelle table
-write_log("inserting table table_c")
+write_log("inserting table table_c ...")
 table_c.write.cassandraFormat("table_c", "production", "").mode("append").save()
 write_log("table table_c inserted")
 
@@ -86,11 +86,11 @@ GROUP BY lieu, langue, annee, mois, jour
 val table_d = spark.sql(req_table_d)
 
 // creation de la nouvelle table
-write_log("creating table table_d")
+write_log("creating table table_d ...")
 table_d.createCassandraTable("production", "table_d", partitionKeyColumns = Some(Seq("lieu", "langue")), clusteringKeyColumns = Some(Seq("annee", "mois", "jour")))
 write_log("table table_d created")
 
 // insertion des valeurs dans la nouvelle table
-write_log("inserting table table_d")
+write_log("inserting table table_d ...")
 table_d.write.cassandraFormat("table_d", "production", "").mode("append").save()
 write_log("table table_d inserted")
