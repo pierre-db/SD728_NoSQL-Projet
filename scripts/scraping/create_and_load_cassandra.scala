@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 // définition du répertoire de stockage des données
-val path = "/data/day/"
+val path = "home/ubuntu/data/day/"
 
 // définition d'une fonction pour logger les évènements
 val date_format = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss] ")
@@ -44,10 +44,10 @@ write_log("SQL views created")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
-SELECT event.event_id, pays, langue, annee, mois, jour, COUNT(*) AS total
+SELECT event.event_id, pays, langue, annee_event, mois_event, jour_event, annee_mention, mois_mention, jour_mention, COUNT(*) AS total
 FROM event, mentions
 WHERE event.event_id = mentions.event_id
-GROUP BY event.event_id, pays, langue, annee, mois, jour
+GROUP BY event.event_id, pays, langue, annee_event, mois_event, jour_event, annee_mention, mois_mention, jour_mention
 """
 
 // execution de la requête sur le DF
