@@ -6,13 +6,14 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 // définition du répertoire de stockage des données
-val path = "/tmp/tests/day/"
+val path = "/data/day/"
 
 // définition d'une fonction pour logger les évènements
-val date_format = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss] ");
+val date_format = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss] ")
 def now() :String = {date_format.format(Calendar.getInstance().getTime)}
 def write_log(str:String) =  {
     val log = new FileWriter("cassandra_loading.log", true)
+    println(now + str)
     log.write(now + str + "\n")
     log.close
 }
@@ -20,16 +21,26 @@ def write_log(str:String) =  {
 write_log("started script on path " + path)
 
 // chargement des fichiers dans des DF
+write_log("loading table events ...")
 val event = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.export.CSV.gz")
+write_log("table events loaded")
+write_log("loading table mentions ...")
 val mentions = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.mentions.CSV.gz")
+write_log("table mentions loaded")
+write_log("loading table gkg_c ...")
 val gkg_c = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg.csv.gz")
+write_log("table gkg_c loaded")
+write_log("loading gkg_d  ...")
 val gkg_d = spark.read.format("csv").options(Map("header"->"true", "delimiter" -> "\t", "encoding" -> "ISO-8859-1", "inferSchema" -> "true")).load(path+"*.gkg_d.csv.gz")
+write_log("table gkg_d loaded")
 
 // créationde vues pour interragir en SQL
+write_log("creating SQL views ...")
 event.createOrReplaceTempView("event")
 mentions.createOrReplaceTempView("mentions")
 gkg_c.createOrReplaceTempView("gkg_c")
 gkg_d.createOrReplaceTempView("gkg_d")
+write_log("SQL views created")
 
 // définition de la requête SQL table_ab
 val req_table_ab = """
@@ -47,7 +58,7 @@ val table_ab = spark.sql(req_table_ab)
 
 // creation de la nouvelle table
 write_log("creating table table_ab ...")
-table_ab.createCassandraTable("production", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("annee", "mois", "jour")))
+table_ab.createCassandraTable("production", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("event_id", "annee", "mois", "jour")))
 write_log("table table_ab created")
 
 // insertion des valeurs dans la nouvelle table

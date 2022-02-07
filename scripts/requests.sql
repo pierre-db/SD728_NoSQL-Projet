@@ -16,7 +16,7 @@ FROM gkg_d
 GROUP BY lieu, langue, annee, mois, jour
 
 -- Requêtes CQL de creation des tables
-CREATE KEYSPACE reponses WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
+CREATE KEYSPACE production WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
 
 -- table_ab
 CREATE TABLE table_ab (
@@ -28,7 +28,7 @@ CREATE TABLE table_ab (
     mois int,
     annee int,
     total int,
-    PRIMARY KEY ((pays), jour, mois, annee)
+    PRIMARY KEY ((pays), event_id, jour, mois, annee)
 );
 
 -- table_c
