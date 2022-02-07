@@ -58,7 +58,7 @@ val table_ab = spark.sql(req_table_ab)
 
 // creation de la nouvelle table
 write_log("creating table table_ab ...")
-table_ab.createCassandraTable("production", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("event_id", "annee", "mois", "jour")))
+table_ab.createCassandraTable("production", "table_ab", partitionKeyColumns = Some(Seq("pays")), clusteringKeyColumns = Some(Seq("event_id", "annee_event", "mois_event", "jour_event", "annee_mention", "mois_mention", "jour_mention")))
 write_log("table table_ab created")
 
 // insertion des valeurs dans la nouvelle table
