@@ -69,13 +69,13 @@ GROUP BY annee -- mois, jour
 ORDER BY compte DESC;
 
 -- c
-SELECT theme, personne, lieu, SUM(total), SUM(somme_ton)/SUM(total), jour -- mois, annee
+SELECT source, theme, personne, lieu, SUM(total) AS somme_total, SUM(somme_ton) AS somme_ton, jour -- mois, annee
 FROM table_c
 WHERE source = 'input'
-GROUP BY theme, personne, lieu, annee -- mois, jour
+GROUP BY theme, personne, lieu, annee; -- mois, jour
 
 -- d
-SELECT langue, lieu, SUM(somme_ton)/SUM(total), jour
+SELECT langue, lieu, SUM(total) AS somme_total, SUM(somme_ton) AS somme_ton, jour
 FROM table_d
 WHERE langue = 'input1' AND lieu = 'input2'
-GROUP BY annee -- mois, jour
+GROUP BY annee; -- mois, jour
