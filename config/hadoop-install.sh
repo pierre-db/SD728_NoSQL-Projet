@@ -26,6 +26,8 @@ sudo mv hadoop-3.3.1 /opt/hadoop
 mkdir -p /home/ubuntu/hadoop/data
 
 # sur le master uniquement :
+# mise à jour du /opt/hadoop/etc/workers
+#vim /opt/hadoop/etc/workers
 #/opt/hadoop/bin/hdfs namenode -format
 #/opt/hadoop/sbin/start-dfs.sh
 #/opt/hadoop/bin/hdfs dfsadmin -report
