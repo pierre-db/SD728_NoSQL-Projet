@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 // définition du répertoire de stockage des données
-val path = "/home/ubuntu/data/day/"
+val path = "hdfs://tp-hadoop-1:9000/data/"
 
 // définition d'une fonction pour logger les évènements
 val date_format = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss] ")
