@@ -73,10 +73,10 @@ GROUP BY event_id, annee_event, mois_event, jour_event;
 SELECT source, theme, personne, lieu, SUM(total) AS somme_total, SUM(somme_ton) AS somme_ton, jour -- mois, annee
 FROM table_c
 WHERE source = 'input'
-GROUP BY theme, personne, lieu, annee_event; -- mois, jour
+GROUP BY theme, personne, lieu, annee; -- mois, jour
 
 -- d
 SELECT langue, lieu, SUM(total) AS somme_total, SUM(somme_ton) AS somme_ton
 FROM table_d
 WHERE langue = 'input1' AND lieu = 'input2'
-GROUP BY annee_event; -- mois, jour
+GROUP BY annee; -- mois, jour

@@ -188,7 +188,7 @@ if __name__=="__main__":
             #move(file, '/tmp/tests/traiter/')
         elif "mentions" in file:
             df=nettoyage_mentions(file)
-            subprocess.call(f"gzip {file.strip('.zip')}".split())          
+            subprocess.call(f"gzip {file.strip('.zip')}".split())
             #move(file, '/tmp/tests/traiter/')
         elif "gkg" in file:
             df=nettoyage_gkg(file)
