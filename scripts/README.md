@@ -1,6 +1,6 @@
 ## Nos scripts
 
-Ce dossier contient l'ensemble des scripts utilisés pour lancer les outils utilisés, charger, et prétraiter les données ainsi que créer les tables Cassandra.
+Ce dossier contient l'ensemble des scripts utilisés pour lancer les outils utilisés, charger, et prétraiter les données ainsi que créer les tables Cassandra et les mettre à jour périodiquement.
 - ```connect-jupyter.sh```: permet de se connecter sur une machine de TP en redirigeant les ports nécessaires.
 - ```start-spark.sh```: permet de lancer Spark avec les paramètres nécessaires.
 - ```requests.sql```: contient l'ensemble des requettes SQL/CQL d'agrégation et création des tables, puis de requêtage pour répondre aux questions
