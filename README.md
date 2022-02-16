@@ -1,4 +1,4 @@
-# Projet INF738 : NoSQL
+# Projet INF728 : NoSQL
 
 Liens vers l'énoncé du TP : http://andreiarion.github.io/Project2022.html.
 
